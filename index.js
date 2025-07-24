@@ -29,10 +29,10 @@ db.run(`CREATE TABLE IF NOT EXISTS tips (
 
 // Home page: show tips
 app.get('/', (req, res) => {
-  db.all('SELECT * FROM tips ORDER BY id DESC', [], (err, rows) => {
-    if (err) return res.status(500).send('Database error');
-    res.render('index', { tips: rows });
-  });
+      db.all('SELECT * FROM tips ORDER BY thumb_up DESC, thumb_down ASC, text ASC', [], (err, rows) => {
+        if (err) return res.status(500).send('Database error');
+        res.render('index', { tips: rows });
+      });
 });
 
 // Add tip
@@ -50,6 +50,24 @@ app.post('/vote', (req, res) => {
   if (!id || !['up', 'down'].includes(action)) return res.redirect('/');
   const column = action === 'up' ? 'thumb_up' : 'thumb_down';
   db.run(`UPDATE tips SET ${column} = ${column} + 1 WHERE id = ?`, [id], (err) => {
+    res.redirect('/');
+  });
+});
+
+// Edit tip
+app.post('/edit-tip', (req, res) => {
+  const { id, text } = req.body;
+  if (!id || !text) return res.redirect('/');
+  db.run('UPDATE tips SET text = ? WHERE id = ?', [text, id], (err) => {
+    res.redirect('/');
+  });
+});
+
+// Delete tip
+app.post('/delete-tip', (req, res) => {
+  const { id } = req.body;
+  if (!id) return res.redirect('/');
+  db.run('DELETE FROM tips WHERE id = ?', [id], (err) => {
     res.redirect('/');
   });
 });

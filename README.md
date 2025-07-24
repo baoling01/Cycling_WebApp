@@ -32,9 +32,3 @@ A responsive web application for sharing and voting on cycling tips.
 4. **Access the app:**
    Open your browser and go to `http://localhost:3000`
 
-## Deployment
-- Deploy on platforms like Heroku, Render, or Azure App Service.
-- For production, consider using PostgreSQL or MySQL instead of SQLite.
-
-## License
-MIT
